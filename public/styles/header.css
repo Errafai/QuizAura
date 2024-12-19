@@ -73,10 +73,10 @@ header{
     align-items: center;
   }
   .images{
+    margin-left: 2rem;
     width: 80%;
   }
   .text_content{
-    /* width: 100%; */
     text-align: left;
     line-break: initial;
     justify-content: space-evenly;

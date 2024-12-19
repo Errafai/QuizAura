@@ -15,6 +15,10 @@ p{
     letter-spacing: 0;
 }
 
+a{
+    text-decoration: none;
+}
+
 
 #features{
     width: 100%;
@@ -27,6 +31,7 @@ p{
     align-items: center;
     
 }
+
 i{
     font-size: 5rem;
     text-align: center;
@@ -40,6 +45,62 @@ i{
 
 #features2{
     width: 100%;
-    height: 15rem;
-    background-color: aqua;
+    height:auto;
+    background-color: rgb(177, 195, 195);
 }
+
+
+.row1 {
+    border: 1px solid #080909;
+    height: 25rem;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: .3s;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.row1 .content {
+    flex: 6; /* 70% of the height */
+}
+
+.row1 .game_info {
+    width: 100%;
+    flex: 4; /* 30% of the height */
+    background: rgba(0, 0, 0, 0.249); /* Optional: Add a background overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+.row1:hover{
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+#comments{
+    text-align: center;
+}
+
+.row2 {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #080909;
+    height: 15rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: .3s;
+}
+

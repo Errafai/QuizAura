@@ -1,0 +1,48 @@
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="card shadow p-4" style="width: 400px;">
+    <h3 class="card-title text-center mb-4">Register New Account</h3>
+    <form action="/register" mehtod="POST">
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username"  class="form-control" name="username" placeholder="Enter your username" required/>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" id="email"  class="form-control" name="email" placeholder="Enter your email" required/>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label> 
+        <input type="password" name="password"  class="form-control" placeholder="Enter your password" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password_again" class="form-label">Password Again</label> 
+        <input type="password" name="password_again"  class="form-control" placeholder="Enter your password again" required>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" id="terms" class="form-check-input" name="terms">
+        <label for="terms" class="form-check-label">I agree to the terms and conditions</label>
+      </div> 
+      <div class="mb-3 form-check">
+        <input type="checkbox" id="news" class="form-check-input" name="news">
+        <label for="news" class="form-check-label">I want to get emails about news Quizes and exclusive offers</label>
+      </div> 
+      <p class="mt-3">
+        <a href="#">Forgot your password?</a>
+      </p>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+
+      <p class="text-center mt-3">
+        Already have an account?
+        <a href="/login">Log In.</a>
+      </p>
+    </form>
+  </div>
+</div> 

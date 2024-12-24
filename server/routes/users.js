@@ -10,4 +10,11 @@ router.get('/login', async (req, res) => {
     res.render("users/login");
 });
 
+/**
+ * GET |
+ * register page
+ */
+router.get('/register', async (req, res) => {
+  res.render("users/register");
+});
 module.exports = router;

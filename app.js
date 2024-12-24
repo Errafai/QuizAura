@@ -12,14 +12,8 @@ app.use(express.static('public'));
 app.use(expressEjsLayouts);
 app.set('layout', 'layouts/main');
 
-app.get("/", (req, res)=>{
-    res.render("home");
-})
-
-app.get("/games", (req, res)=>{
-    res.render("games");
-})
-
+app.use("/", require("./server/routes/main"));
+app.use("/", require("./server/routes/users"));
 app.listen(3000, ()=>{
     console.log("I'am listening on port 3000 ....");
     

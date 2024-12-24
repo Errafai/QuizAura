@@ -7,7 +7,9 @@ const usersLayout = "../views/layouts/users"
  * login page
  */
 router.get('/login', async (req, res) => {
-    res.render("users/login");
+    res.render("users/login",
+      {layout: usersLayout}
+    );
 });
 
 /**

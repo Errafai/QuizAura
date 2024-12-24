@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const usersLayout = "../views/layouts/users"
+const User = require('../models/User');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 /**
  * GET |
@@ -19,4 +22,5 @@ router.get('/login', async (req, res) => {
 router.get('/register', async (req, res) => {
   res.render("users/register");
 });
+
 module.exports = router;

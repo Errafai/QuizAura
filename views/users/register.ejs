@@ -31,10 +31,36 @@
         <input type="checkbox" id="news" class="form-check-input" name="news">
         <label for="news" class="form-check-label">I want to get emails about news Quizes and exclusive offers</label>
       </div> 
-      <p class="mt-3">
-        <a href="#">Forgot your password?</a>
-      </p>
 
+      <% if (error) { %>
+      <!-- username error-->
+      <% if (error.userExists) { %>
+        <div style="color: red;">
+            <%= error.userExists %>. If this is your username, please <a href="/login">log in</a> and try again.
+        </div>
+      <% } %>
+
+      <!-- email error-->
+      <% if (error.email) { %>
+          <div style="color: red;">
+              <%= error.email %>
+          </div>
+      <% } %>
+
+      <!-- password error-->
+      <% if (error.password) { %>
+          <div style="color: red;">
+              <%= error.password %> 
+          </div>
+      <% } %>
+
+      <!-- terms error-->
+      <% if (error.terms) { %>
+          <div style="color: red;">
+              <%= error.terms %> 
+          </div>
+      <% } %>
+      <% } %>
       <div class="d-grid">
         <button type="submit" class="btn btn-primary">Register</button>
       </div>
@@ -43,6 +69,9 @@
         Already have an account?
         <a href="/login">Log In.</a>
       </p>
+
+
+
     </form>
   </div>
 </div> 

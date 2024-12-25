@@ -69,7 +69,7 @@ router.post("/login", async (req, res) =>
  * register page
  */
 router.get('/register', async (req, res) => {
-  res.render("users/register");
+  res.render("users/register", {error: null});
 });
 
 /**
@@ -82,40 +82,46 @@ router.post("/register", async (req, res) =>
       
       try {
           const {username, password, email, password_again, terms, news} = req.body;
-
+          const error = {};
           const hashedPassword = await bcrypt.hash(password, 10);
 
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(email)) {
-            return res.status(400).json({message: "Invalid email"});
+            error.email = "Invalid email";
+          } else if (!email) {
+            error.email = "Please enter an email";
           }
 
           const termsAccepted = terms === "on" ? true : false;
           const subscribed = news === "on" ? true : false;
 
-          if (!terms) {
-            return res.status(400).json({message: "You must accept the terms"});
+          if (!termsAccepted) {
+            error.terms = "You must accept the terms";
           }
 
           if (password !== password_again) {
-            return res.status(400).json({message: "Passwords do not match"});
+            error.password = "Passwords do not match";
+          }
+          
+          const userExists = await User.findOne({username});
+          
+          if (userExists) {
+            error.userExists = "User already exists";
+          } else if (!username) {
+            error.userExists = "Please enter a username";
           }
 
-          try {
+          if (Object.keys(error).length > 0) { 
+            return res.render("users/register", {error, username, email});
+          }
+
            const user = await User.create({username, password:hashedPassword, email, termsAccepted, subscribed});
            res.status(201).json({
             message: "User Created", user
            });
-
-          } catch (error) {
-            if (error.code === 11000 ) {
-              res.status(409).json({message: "User already in use"});
-            }
-            res.status(500).json({message: "Internal server error"});
-            console.log(error);
-          }
       } catch (error) {
-         console.log(error) 
+         console.log(error);
+         res.status(500).json({message: "Internal server error"});
       }
 });
 

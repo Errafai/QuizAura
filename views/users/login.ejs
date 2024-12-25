@@ -1,7 +1,12 @@
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
   <div class="card shadow p-4" style="width: 400px;">
     <h3 class="card-title text-center mb-4">Login</h3>
-    <form action="/login" mehtod="POST">
+    <form action="/login" method="POST">
+      <% if (error) { %>
+        <div style="color: red;">
+            <%= error %>
+        </div>
+    <% } %>
       <div class="mb-3">
         <label for="identifier" class="form-label">Username or Email</label>
         <input type="text" id="identifier"  class="form-control" name="identifier" placeholder="Enter your username or email" required/>

@@ -31,7 +31,7 @@ const authMiddleware = (req, res, next) => {
  * login page
  */
 router.get('/login', async (req, res) => {
-    res.render("users/login", {error: null});
+    res.render("users/login", {error: null });
 });
 /**
  * POST
@@ -57,11 +57,31 @@ router.post("/login", async (req, res) =>
           const tokenExpire = rememberMe ? "7d" : "1h";
           const token = jwt.sign({userId: user._id} ,jwtSecret, {expiresIn: tokenExpire});
           res.cookie("token", token, {httpOnly: true}, {maxAge: rememberMe ? 604800000 : 3600000});
-          res.redirect('/');
+          res.user = user;
+          res.redirect('/dashboard');
           
       } catch (error) {
          console.log(error) 
       }
+});
+
+/**
+ * GET |
+ * dashboard
+ */
+router.get('/dashboard', authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId);
+  console.log(user);
+  res.render("users/dashboard", {error: null, layout: usersLayout, user});  
+});
+
+/**
+ * GET |
+ * profile
+ */
+router.get('/user', authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId);
+  res.render("users/user", {error: null, layout: usersLayout, user});
 });
 
 /**
@@ -130,7 +150,7 @@ router.post("/register", async (req, res) =>
 */
 router.post('/logout', (req, res) => {
   res.clearCookie('token'); // Clear the token cookie
-  res.redirect('/login');
+  res.redirect('/');
 });
 
 module.exports = router;

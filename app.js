@@ -44,7 +44,7 @@ app.use(express.static('public'));
 /**routing */
 app.use("/", require("./server/routes/main"));
 app.use("/", require("./server/routes/users"));
-
+app.use("/", require("./server/routes/api"));
 
 app.listen(PORT, ()=>{
     console.log(`I'am listening on port ${PORT} ....`);

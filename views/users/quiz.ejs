@@ -1,0 +1,294 @@
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .min-h-screen {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1f35 0%, #0f172a 50%, #1e293b 100%);
+    color: #f8fafc;
+    padding: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .min-h-screen {
+      padding: 2rem;
+    }
+  }
+
+  .max-w-3xl {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  /* Progress Tracker */
+  .progress-container {
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 0.5rem;
+    background-color: rgba(51, 65, 85, 0.5);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+    transition: width 0.5s ease-out;
+    border-radius: 9999px;
+  }
+
+  /* Question Card */
+  .question-card {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .question-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 768px) {
+    .question-title {
+      font-size: 1.875rem;
+    }
+  }
+
+  /* Options */
+  .options-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .option-label {
+    display: block;
+    cursor: pointer;
+  }
+
+  .option-input {
+    display: none;
+  }
+
+  .option-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .option-content:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(59, 130, 246, 0.5);
+    transform: scale(1.01);
+  }
+
+  .option-input:checked + .option-content {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+    transform: scale(1.02);
+  }
+
+  .option-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  /* Navigation */
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-back {
+    background-color: rgba(51, 65, 85, 0.8);
+    color: #f8fafc;
+  }
+
+  .btn-back:hover {
+    background-color: rgba(71, 85, 105, 0.8);
+  }
+
+  .btn-next {
+    background-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+  }
+
+  .btn-next:hover {
+    background-color: #2563eb;
+    box-shadow: 0 4px 12px -1px rgba(59, 130, 246, 0.4);
+  }
+
+  .btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.5rem;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+</style>
+
+<div class="min-h-screen">
+  <div class="max-w-3xl">
+    <!-- Progress Tracker -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <span class="progress-text">
+          Question <%= result.currentQuestionIndex + 1 %> of <%= quiz.questions.length %>
+        </span>
+        <span class="progress-text">
+          <%= Math.round(((result.currentQuestionIndex + 1) / quiz.questions.length) * 100) %>%
+        </span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar" style="width: <%= ((result.currentQuestionIndex + 1) / quiz.questions.length) * 100 %>%"></div>
+      </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="question-card">
+      <h2 class="question-title">
+        <%= currentQuestion.text %>
+      </h2>
+
+      <!-- Options Form -->
+      <form action="/quizzes/<%= quiz._id %>/next" method="POST">
+        <input type="hidden" name="questionId" value="<%= currentQuestion._id %>">
+        
+        <div class="options-grid">
+          <% currentQuestion.options.forEach((option, index) => { %>
+            <label class="option-label">
+              <input
+                type="radio"
+                name="selectedOption"
+                value="<%= option.text %>"
+                class="option-input"
+                required>
+              <div class="option-content">
+                <span class="option-text"><%= option.text %></span>
+              </div>
+            </label>
+          <% }); %>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="nav-container">
+          <% if (result.currentQuestionIndex > 0) { %>
+            <button
+              type="button"
+              onclick="window.history.back()"
+              class="btn btn-back">
+              Back
+            </button>
+          <% } else { %>
+            <div></div>
+          <% } %>
+
+          <button type="submit" class="btn btn-next">
+            <% if (result.currentQuestionIndex === quiz.questions.length - 1) { %>
+              Finish Quiz
+            <% } else { %>
+              Next Question
+              <svg viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            <% } %>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const options = document.querySelectorAll('.option-input');
+    options.forEach(option => {
+      option.addEventListener('change', () => {
+        // Remove previous selections
+        document.querySelectorAll('.option-content').forEach(el => {
+          el.style.background = 'rgba(255, 255, 255, 0.05)';
+          el.style.borderColor = 'transparent';
+          el.style.transform = 'scale(1)';
+        });
+        
+        // Style selected option
+        if (option.checked) {
+          const content = option.nextElementSibling;
+          content.style.background = 'rgba(59, 130, 246, 0.2)';
+          content.style.borderColor = '#3b82f6';
+          content.style.transform = 'scale(1.02)';
+        }
+      });
+    });
+  });
+</script>

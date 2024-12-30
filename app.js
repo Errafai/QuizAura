@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const connectDB = require("./server/config/db");
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
+const methodOverride = require('method-override');
 const PORT = 3000 || process.env.PORT;
 
 /**DATABASE */
@@ -32,7 +32,7 @@ app.use(session(
     //cookie: {maxAge: new Date {Date.now() + (3600000)}}
 ));
 
-
+app.use(methodOverride('_method'));
 
 /**template */
 app.use(expressEjsLayouts);
@@ -45,6 +45,7 @@ app.use(express.static('public'));
 app.use("/", require("./server/routes/main"));
 app.use("/", require("./server/routes/users"));
 app.use("/", require("./server/routes/api"));
+//app.use("/", require("./server/routes/quiz"));
 
 app.listen(PORT, ()=>{
     console.log(`I'am listening on port ${PORT} ....`);

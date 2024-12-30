@@ -1,137 +1,260 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Result</title>
-    <link rel="stylesheet" href="/styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7fafc;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+<div class="min-h-screen">
+    <div class="max-w-3xl">
+      <!-- Header -->
+      <header class="header">
+        <h1 class="title">Quiz Results</h1>
+        <p class="subtitle">Congratulations <%= user.name %>! Here's your personality analysis.</p>
+      </header>
 
-        .result-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .result-image {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            margin: 20px auto;
-        }
-
-        .result-description {
-            font-size: 1.2em;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .score-breakdown {
-            text-align: left;
-            margin: 20px 0;
-        }
-
-        .score-breakdown ul {
-            padding: 0;
-            list-style: none;
-        }
-
-        .score-breakdown li {
-            font-size: 1em;
-            color: #444;
-            margin: 5px 0;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .action-buttons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .action-buttons .retake {
-            background: #6a11cb;
-            color: white;
-        }
-
-        .action-buttons .retake:hover {
-            background: #5211a3;
-        }
-
-        .action-buttons .share {
-            background: #2575fc;
-            color: white;
-        }
-
-        .action-buttons .share:hover {
-            background: #1a5eb8;
-        }
-    </style>
-</head>
-<body>
-    <div class="result-container">
-        <h1>Congratulations, <%= user.username %>!</h1>
-        <img src="<%= result.image %>" alt="<%= result.name %>" class="result-image">
-        <h2>Your Result: <%= result.name %></h2>
-        <p class="result-description"><%= result.description %></p>
-
-        <div class="score-breakdown">
-            <h3>Score Breakdown:</h3>
-            <ul>
-                <% for (const [key, value] of Object.entries(scores)) { %>
-                    <li><strong><%= key %>:</strong> <%= value %> points</li>
-                <% } %>
-            </ul>
+      <!-- Main Result Card -->
+      <div class="result-card">
+        <div class="result-header">
+          <h2 class="result-title">You are <%= result.name %>!</h2>
+          <p class="result-description"><%= result.description %></p>
         </div>
 
+        <!-- Score Breakdown -->
+        <div class="score-section">
+          <h3 class="score-title">Your Personality Breakdown</h3>
+          
+          <% for (const [trait, score] of Object.entries(scores)) { %>
+            <div class="score-item">
+              <div class="score-label">
+                <span><%= trait %></span>
+                <span><%= Math.round(score) %>%</span>
+              </div>
+              <div class="score-bar-bg">
+                <div class="score-bar" style="--score-width: <%= Math.round(score) %>%"></div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="retake" onclick="retakeQuiz()">Retake Quiz</button>
-            <button class="share" onclick="shareResult()">Share Result</button>
+            <form action="/quizzes/<%= quizId %>/retake?_method=DELETE" method="POST" class="inline">
+                <button type="submit" class="btn btn-primary flex items-center">
+                  <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                  </svg>
+                  Retake Quiz
+                </button>
+              </form>              
+          <button onclick="shareResults()" class="btn btn-secondary">
+            <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg>
+            Share Results
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        function retakeQuiz() {
-            window.location.href = '/quizzes/<%= quizId %>/start';
-        }
+  <script>
+    function shareResults() {
+      // You can implement sharing functionality here
+      // For example, using the Web Share API if available
+      if (navigator.share) {
+        navigator.share({
+          title: 'My Quiz Results',
+          text: 'I am <%= result.name %>! Check out my personality quiz results!',
+          url: window.location.href
+        }).catch(console.error);
+      } else {
+        // Fallback - you could copy to clipboard or show sharing options
+        alert('Use this link to share your results: ' + window.location.href);
+      }
+    }
+  </script>
 
-        function shareResult() {
-            const shareText = `I got "<%= result.name %>" on QuizAura! Take the quiz now: ${window.location.origin}/quizzes/<%= quizId %>`;
-            navigator.clipboard.writeText(shareText).then(() => {
-                alert('Result copied to clipboard! Share it with your friends.');
-            }).catch(err => {
-                console.error('Could not copy result to clipboard: ', err);
-            });
-        }
-    </script>
-</body>
-</html>
+<style>
+    /* [Previous styles remain the same up to score-section] */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fillBar {
+      from { width: 0; }
+      to { width: var(--score-width); }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .min-h-screen {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1f35 0%, #0f172a 50%, #1e293b 100%);
+      color: #f8fafc;
+      padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .min-h-screen {
+        padding: 2rem;
+      }
+    }
+
+    .max-w-3xl {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #94a3b8;
+    }
+
+    .result-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                  0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      animation: scaleIn 0.6s ease-out;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .result-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .result-description {
+      color: #cbd5e1;
+      line-height: 1.6;
+      font-size: 1.125rem;
+    }
+
+    .score-section {
+      margin-top: 3rem;
+    }
+
+    .score-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #e2e8f0;
+    }
+
+    .score-item {
+      margin-bottom: 1.5rem;
+    }
+
+    .score-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      color: #e2e8f0;
+    }
+
+    .score-bar-bg {
+      width: 100%;
+      height: 0.75rem;
+      background: rgba(51, 65, 85, 0.5);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      border-radius: 9999px;
+      animation: fillBar 1s ease-out forwards;
+      background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px -1px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.8);
+      color: #f8fafc;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(71, 85, 105, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* Additional styles for user info */
+    .user-info {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #94a3b8;
+      font-size: 1.125rem;
+    }
+
+    .user-name {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+  </style>

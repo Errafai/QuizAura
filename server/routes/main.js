@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const Quiz = require("../models/Quiz");
 
 
 /**
  * GET/
  * Home
  */
-router.get("/", (req, res)=>{
-  res.render("home");
+router.get("/", async (req, res)=>{
+  const quizes =  await Quiz.find();
+  res.render("home", {quizes});
 });
 
 
@@ -15,8 +17,9 @@ router.get("/", (req, res)=>{
  * GET/
  * Quizes
  */
-router.get("/games", (req, res)=>{
-  res.render("games");
+router.get("/games", async (req, res)=>{
+  const quizes =  await Quiz.find();
+  res.render("games", {quizes});
 });
 
 

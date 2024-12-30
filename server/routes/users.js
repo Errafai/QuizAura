@@ -5,7 +5,10 @@ const User = require('../models/User');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
-
+const Result = require('../models/Result');
+const Quiz = require('../models/Quiz');
+const { find } = require("lodash");
+const quizLayout = "../views/layouts/quiz";
 
 
 /**
@@ -71,8 +74,9 @@ router.post("/login", async (req, res) =>
  */
 router.get('/dashboard', authMiddleware, async (req, res) => {
   const user = await User.findById(req.userId);
+  const quizes = await Quiz.find();
   console.log(user);
-  res.render("users/dashboard", {error: null, layout: usersLayout, user});  
+  res.render("users/dashboard", {error: null, layout: usersLayout, user, quizes});  
 });
 
 /**
@@ -145,6 +149,137 @@ router.post("/register", async (req, res) =>
       }
 });
 
+
+// GET /quizzes
+router.get('/quizzes/:id/start', authMiddleware, async (req, res) => {
+  try {
+    const { id: quizId } = req.params;
+    const userId = req.userId;
+    const user = await User.findById(userId);
+
+    // Check if the user has already started this quiz
+    let result = await Result.findOne({ userId, quizId });
+
+    if (!result) {
+      // Create a new result document
+      result = new Result({
+        userId,
+        quizId,
+        currentQuestionIndex: 0,
+        answers: [],
+      });
+      await result.save();
+    }
+
+    // Fetch the quiz and current question
+    const quiz = await Quiz.findById(quizId);
+    const currentQuestion = quiz.questions[result.currentQuestionIndex];
+
+    res.render('users/quiz',{ quiz, currentQuestion, result , user, layout: quizLayout });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+// POST /quizzes/:id/next
+router.post('/quizzes/:id/next', authMiddleware, async (req, res) => {
+  try {
+    const { id: quizId } = req.params;
+    const userId = req.userId;
+    const { questionId, selectedOption } = req.body;
+    const user = await User.findById(userId);
+
+    // Find the result document
+    const result = await Result.findOne({ userId, quizId });
+    if (!result) return res.status(404).json({ message: 'No progress found for this quiz.' });
+
+    // Save the user's answer
+    result.answers.push({ questionId, selectedOption });
+
+    // Move to the next question
+    const quiz = await Quiz.findById(quizId);
+    result.currentQuestionIndex += 1;
+
+    // If there are no more questions, redirect to the finish route
+    if (result.currentQuestionIndex >= quiz.questions.length) {
+      await result.save();
+      return res.redirect(`/quizzes/${quizId}/finish`);
+    }
+
+    // Save progress and fetch the next question
+    await result.save();
+    const nextQuestion = quiz.questions[result.currentQuestionIndex];
+    res.render('users/quiz', { quiz, currentQuestion: nextQuestion,result , user, layout: quizLayout });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/quizzes/:id/finish', authMiddleware, async (req, res) => {
+  try {
+    const { id: quizId } = req.params;
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    // Find the result document
+    const result = await Result.findOne({ userId, quizId });
+    if (!result) return res.status(404).json({ message: 'No progress found for this quiz.' });
+
+    const quiz = await Quiz.findById(quizId);
+
+    // Calculate scores
+    const totalScores = new Map();
+    result.answers.forEach(answer => {
+      const question = quiz.questions.id(answer.questionId);
+      const selectedOption = question.options.find(opt => opt.text === answer.selectedOption);
+      if (selectedOption) {
+        for (const [key, value] of selectedOption.scores.entries()) {
+          totalScores.set(key, (totalScores.get(key) || 0) + value);
+        }
+      }
+    });
+
+    // Determine the top result
+    let topResult = { name: null, score: 0 };
+    for (const [key, score] of totalScores.entries()) {
+      if (score > topResult.score) {
+        topResult = { name: key, score };
+      }
+    }
+
+    const resultDetails = quiz.possibleResults.find(r => r.name === topResult.name);
+    result.result = resultDetails;
+    await result.save();
+
+    res.render('users/results', {quiz, user, result: resultDetails, scores: Object.fromEntries(totalScores), quizId , layout: quizLayout });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/quizzes/:id/retake', authMiddleware,async (req, res) => {
+  try {
+    const { id: quizId } = req.params;
+    const userId = req.userId; // Assuming you're using authentication and `req.user` contains the logged-in user.
+    const idQuiz = quizId;
+    // Delete the previous quiz result for the user and quiz
+    console.log(userId, quizId);
+    const isDeleted = await Result.deleteOne({ userId, quizId });
+    console.log(isDeleted);
+    // Redirect to the quiz start page
+    res.redirect(`/quizzes/${idQuiz}/start`);
+  } catch (error) {
+    console.error('Error retaking quiz:', error);
+    res.status(500).send('Something went wrong while trying to retake the quiz.');
+  }
+});
+router.get('/quiz/:id', authMiddleware, async (req, res) => { 
+  const quizzes = await Quiz.find();
+  const quiz = await Quiz.findById(req.params.id);
+  const user = await User.findById(req.userId);
+
+  res.render('users/quiz_start', { user,quiz , quizzes, layout: usersLayout });
+});
 /** 
  * POST /logout
 */

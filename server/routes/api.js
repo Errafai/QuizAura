@@ -18,8 +18,9 @@ router.get('/quizzes', async (req, res) => {
 
 // GET /api/quizzes/:id
 // Get a quiz by ID
-router.get('/quizzes/:id', getQuiz, (req, res) => {
-  res.json(res.quiz);
+router.get('/quizzes/:id', getQuiz, async(req, res) => {
+  const quizzes = await Quiz.find();
+  res.render('game_detail', { quiz: res.quiz, quizzes});
 });
 
 // POST /api/quizzes
@@ -28,6 +29,7 @@ router.post('/quizzes', async (req, res) => {
   const quiz = new Quiz({
     image: req.body.image,
     title: req.body.title,
+    headline: req.body.headline,
     description: req.body.description,
     questions: req.body.questions,
     possibleResults: req.body.possibleResults,
@@ -46,6 +48,7 @@ router.post('/quizzes', async (req, res) => {
 router.put('/quizzes/:id', getQuiz, async (req, res) => {
   res.quiz.image = req.body.image;
   res.quiz.title = req.body.title;
+  res.quiz.headline = req.body.headline;
   res.quiz.description = req.body.description;
   res.quiz.questions = req.body.questions;
   res.quiz.possibleResults = req.body.possibleResults;

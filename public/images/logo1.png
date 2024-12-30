@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background Gradient -->
+  <defs>
+    <radialGradient id="backgroundGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6a11cb" />
+      <stop offset="100%" stop-color="#2575fc" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="100" fill="url(#backgroundGradient)" />
+
+  <!-- Abstract Q Shape -->
+  <g fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round">
+    <path d="M100 40 A60 60 0 1 1 99.9 40" /> <!-- Outer Circle -->
+    <path d="M100 100 L120 120" stroke="#ffffff" stroke-width="6" /> <!-- Tail of Q -->
+  </g>
+
+  <!-- Inner Glow Effect -->
+  <defs>
+    <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="40" fill="url(#innerGlow)" />
+</svg>

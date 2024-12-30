@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transition: width 0.5s;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .options button {
+            padding: 10px;
+            border: none;
+            background: #2575fc;
+            color: white;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .options button:hover {
+            background: #1a5eb8;
+        }
+
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-buttons .back {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .nav-buttons .back:hover {
+            background: #c4c4c4;
+        }
+
+        .nav-buttons .next {
+            background: #6a11cb;
+            color: white;
+        }
+
+        .nav-buttons .next:hover {
+            background: #5211a3;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-bar-fill" style="width:<%=progress%>%;"></div>
+        </div>
+
+        <!-- Question Content -->
+        <h1><%= currentQuestion.question %></h1>
+
+        <!-- Options -->
+        <div class="options">
+            <% currentQuestion.options.forEach(option => { %>
+                <button onclick="submitAnswer('<%= option.text %>')"><%= option.text %></button>
+            <% }); %>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <% if (currentQuestionIndex > 0) { %>
+                <button class="back" onclick="navigate('back')">Back</button>
+            <% } %>
+            <% if (!isLastQuestion) { %>
+                <button class="next" onclick="navigate('next')">Next</button>
+            <% } else { %>
+                <button class="next" onclick="finishQuiz()">Finish</button>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        function submitAnswer(answer) {
+            fetch('/api/quizzes/<%= quizId %>/answer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ questionId: '<%= currentQuestion._id %>', selectedOption: answer })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Answer submitted successfully!');
+                } else {
+                    console.error('Error submitting answer.');
+                }
+            });
+        }
+
+        function navigate(direction) {
+            window.location.href = `/quizzes/<%= quizId %>?step=<%= currentQuestionIndex %>` + (direction === 'next' ? 1 : -1);
+        }
+
+        function finishQuiz() {
+            window.location.href = `/quizzes/<%= quizId %>/finish`;
+        }
+    </script>
+</body>
+</html>

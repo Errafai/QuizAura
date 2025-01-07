@@ -1,48 +1,169 @@
-<div class="bg-light">
-  <section class="">
-      <div class="container my-5 d-flex justify-content-center align-items-center">
-          <div class="info-section">
+<style>
+    .quiz-detail-container {
+      background: linear-gradient(135deg, #1a1f35 0%, #0f172a 50%, #1e293b 100%);
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+    
+    .card-custom {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      color: #f8fafc;
+      max-width: 800px;
+      width: 90%;
+    }
+    
+    .card-custom h2 {
+      color: #f8fafc;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .card-custom p {
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    
+    .badge {
+      background: rgba(59, 130, 246, 0.2) !important;
+      color: #60a5fa;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+    }
+    
+    .btn-custom {
+      background: #3b82f6;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .btn-custom:hover {
+      background: #2563eb;
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline-light {
+      border-color: rgba(148, 163, 184, 0.3);
+      color: #94a3b8;
+    }
+    
+    .btn-outline-light:hover {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: rgba(148, 163, 184, 0.5);
+      color: #f8fafc;
+    }
+    
+    /* More Quizzes Section */
+    .more-quizzes {
+      padding: 4rem 2rem;
+      background: rgba(30, 41, 59, 0.3);
+    }
+    
+    .more-quizzes h2 {
+      color: #f8fafc;
+      margin-bottom: 2rem;
+    }
+    
+    .quiz-card {
+      text-decoration: none;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .quiz-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .quiz-card-image {
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      border-radius: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quiz-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    
+    .quiz-card:hover .quiz-card-overlay {
+      opacity: 1;
+    }
+    
+    .quiz-card-info {
+      color: #f8fafc;
+      text-align: center;
+    }
+    
+    .quiz-card-info h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .quiz-card-info h5 {
+      font-size: 1rem;
+      color: #94a3b8;
+    }
+    </style>
+    
+    <div class="quiz-detail-container">
+      <section>
+        <div class="container my-5 d-flex justify-content-center align-items-center">
           <div class="card card-custom p-4">
-              <h2><%= quiz.title %></h2>
-              <div class="d-flex gap-2 mb-3">
-              <span class="badge bg-secondary">CSS</span>
-              <span class="badge bg-secondary">PRO</span>
-              </div>
-              <h2>Description</h2>
-              <p>
-              <%= quiz.description %>
-              </p>
-              <div class="footer-buttons d-flex justify-content-between">
+            <h2><%= quiz.title %></h2>
+            <div class="d-flex gap-2 mb-3">
+              <span class="badge">CSS</span>
+              <span class="badge">PRO</span>
+            </div>
+            <h2>Description</h2>
+            <p><%= quiz.description %></p>
+            <div class="footer-buttons d-flex justify-content-between mt-4">
               <button class="btn btn-outline-light">Share</button>
               <div class="d-flex gap-3">
-                  <a href="/quizzes/<%=quiz._id %>/start" class="btn btn-custom">Start Quiz</a>
+                <a href="/quizzes/<%=quiz._id %>/start" class="btn-custom">Start Quiz</a>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <section class="more-quizzes">
+        <h2 class="text-center">More Quizzes</h2>
+        <div class="container">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            <% for( let i = 0; i < 3; i++ ) { %>
+              <div class="col">
+                <a href="/quizzes/<%=quizzes[i]._id%>" class="quiz-card">
+                  <div class="quiz-card-image" style="background-image: url(<%=quizzes[i].image%>);">
+                    <div class="quiz-card-overlay">
+                      <div class="quiz-card-info">
+                        <h4><%= quizzes[i].title %></h4>
+                        <h5><%= quizzes[i].headline %></h5>
+                      </div>
+                    </div>
+                  </div>
+                </a>
               </div>
+            <% } %>
           </div>
-          </div>
-      </div>
-      
+        </div>
       </section>
-      
-      <section id="features2" class="p-4">
-          <h2 class="text-center mb-4" style="color: black;">More Quizzes</h2>
-          <div class="container text-center">
-           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-              <% for( let i = 0; i < 3; i++ ) { %>
-                                  <div class="col">
-                       <a href="/quizzes/<%=quizzes[i]._id%>" class="quiz-card">
-                           <div class="quiz-card-image" style="background-image: url(<%=quizzes[i].image%>);">
-                               <div class="quiz-card-overlay">
-                                   <div class="quiz-card-info">
-                                       <h4><%= quizzes[i].title %></h4>
-                                       <h5><%= quizzes[i].headline %></h5>
-                                   </div>
-                               </div>
-                           </div>
-                       </a>
-                   </div>
-              <% } %>                
-           </div>
-       </div>
-      </section>
-</div>
+    </div>

@@ -75,8 +75,9 @@ router.post("/login", async (req, res) =>
 router.get('/dashboard', authMiddleware, async (req, res) => {
   const user = await User.findById(req.userId);
   const quizes = await Quiz.find();
-  console.log(user);
-  res.render("users/dashboard", {error: null, layout: usersLayout, user, quizes});  
+  const results = await Result.find({userId: req.userId});
+  
+  res.render("users/dashboard", {error: null, layout: usersLayout, user, quizes, results});  
 });
 
 /**
@@ -85,7 +86,10 @@ router.get('/dashboard', authMiddleware, async (req, res) => {
  */
 router.get('/user', authMiddleware, async (req, res) => {
   const user = await User.findById(req.userId);
-  res.render("users/user", {error: null, layout: usersLayout, user});
+  const quizzes = await Quiz.find();
+  const results = await Result.find({userId: req.userId});
+  console.log(results);
+  res.render("users/user", {error: null, layout: usersLayout, user, quizzes, results});
 });
 
 /**

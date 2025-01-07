@@ -8,6 +8,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const Result = require('../models/Result');
 const Quiz = require('../models/Quiz');
 const { find } = require("lodash");
+const { route } = require("./main");
 const quizLayout = "../views/layouts/quiz";
 
 
@@ -144,9 +145,7 @@ router.post("/register", async (req, res) =>
           }
 
            const user = await User.create({username, password:hashedPassword, email, termsAccepted, subscribed});
-           res.status(201).json({
-            message: "User Created", user
-           });
+           res.redirect("/dashboard");
       } catch (error) {
          console.log(error);
          res.status(500).json({message: "Internal server error"});
@@ -284,10 +283,61 @@ router.get('/quiz/:id', authMiddleware, async (req, res) => {
 
   res.render('users/quiz_start', { user,quiz , quizzes, layout: usersLayout });
 });
+
+
+/**
+ * GET | 
+ * edit page
+ */
+router.get('/edit', authMiddleware, async (req, res) => {
+  const user = await User.findById(req.userId);
+  res.render("users/edit", {error: null, layout: usersLayout, user, success: false});
+});
+/**
+ * POST |
+ * edit user
+ */
+router.post('/edit', authMiddleware, async (req, res) => {
+  
+  try {
+    const user = await User.findById(req.userId);
+    const {username, newpassword,newpassword_again, email, first_name, last_name, location, twitter} = req.body;
+    const error = {};
+    if (newpassword || newpassword_again) {
+      if (newpassword !== newpassword_again) {
+        error.password = "Passwords do not match";
+      }
+      const hashedPassword = await bcrypt.hash(newpassword, 10);
+      user.password = hashedPassword;
+   }
+    
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+          error.email = "Invalid email";
+    } else if (!email) {
+      error.email = "Please enter an email";
+    }
+    if (Object.keys(error).length > 0) {
+      return res.render("users/edit", { error, layout: usersLayout, user, success: false });
+    }
+    user.username = username;
+    user.twitter = twitter;
+    user.location = location;
+    user.first_name = first_name;
+    user.last_name = last_name;
+    user.email = email;
+    await user.save();
+    res.render("users/edit", {error, layout: usersLayout, user, success: true});
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({message: "Internal server error"}); 
+  }
+});
 /** 
  * POST /logout
 */
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   res.clearCookie('token'); // Clear the token cookie
   res.redirect('/');
 });

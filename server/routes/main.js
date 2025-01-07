@@ -8,24 +8,40 @@ const jwt = require("jsonwebtoken");
  * GET/
  * Home
  */
-router.get("/", async (req, res)=>{
-  const quizes =  await Quiz.find();
-  const token = req.cookies.token;
-  console.log(token);
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decoded);
-      res.redirect("/dashboard");
-    } catch (error) {
-      console.log(error);
-      res.clearCookie("token");
+router.get("/", async (req, res) => {
+  try {
+    const quizes = await Quiz.find(); // Fetch quizzes from the database
+    const token = req.cookies.token;
+
+    console.log(token);
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(decoded);
+        console.log("stop");
+        return res.redirect("/dashboard"); // Redirect to the dashboard if token is valid
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          console.log("Token expired:", error.expiredAt);
+          res.clearCookie("token"); // Clear the expired token
+          return res.render("home", { quizes, message: "Your session has expired. Please log in again." });
+        } else {
+          console.log("Token verification failed:", error.message);
+          res.clearCookie("token"); // Clear invalid tokens
+          return res.render("home", { quizes, message: "Invalid token. Please log in again." });
+        }
+      }
     }
-  }
-  else{
-    res.render("home", {quizes});
+
+    // No token, render the home page with quizzes
+    res.render("home", { quizes });
+  } catch (error) {
+    console.error("Error fetching quizzes:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 /**

@@ -140,7 +140,7 @@
                         <div class="card-body text-center d-flex align-items-center">
                             <img src="<%= quiz.image %>" alt="<%= quiz.title %> thumbnail">
                             <div style="flex-grow: 1;">
-                                <a href="/quizzes/<%=quiz._id%>">
+                                <a href="/quiz/<%=quiz._id%>">
                                     <h5 class="card-title"><%= quiz.title %></h5>
                                 </a>
                                 <% const result = results.find(r => r.quizId.toString() === quiz._id.toString()); %>

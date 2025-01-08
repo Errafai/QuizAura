@@ -35,7 +35,8 @@ const authMiddleware = (req, res, next) => {
  * login page
  */
 router.get('/login', async (req, res) => {
-    res.render("users/login", {error: null });
+    const quizes = await Quiz.find();
+    res.render("users/login", {error: null, quizes });
 });
 /**
  * POST
@@ -46,16 +47,17 @@ router.post("/login", async (req, res) =>
       
       try {
           const {identifier, password, rememberMe} = req.body;
+          const quizes = await Quiz.find();
 
           const user = await User.findOne({$or: [{username: identifier}, {email: identifier}]});
           if (!user) {
-            return res.render("users/login", {error: "Invalide Cridentials"});
+            return res.render("users/login", {error: "Invalide Cridentials", quizes});
           }
           
           const isPasswordValid = await bcrypt.compare(password, user.password);
 
           if (!isPasswordValid) {
-            return res.render("users/login", {error: "Invalide Cridentials"});
+            return res.render("users/login", {error: "Invalide Cridentials", quizes});
           }
 
           const tokenExpire = rememberMe ? "7d" : "1h";
@@ -98,7 +100,8 @@ router.get('/user', authMiddleware, async (req, res) => {
  * register page
  */
 router.get('/register', async (req, res) => {
-  res.render("users/register", {error: null});
+  const quizes = await Quiz.find();
+  res.render("users/register", {error: null, quizes});
 });
 
 /**
@@ -113,6 +116,7 @@ router.post("/register", async (req, res) =>
           const {username, password, email, password_again, terms, news} = req.body;
           const error = {};
           const hashedPassword = await bcrypt.hash(password, 10);
+          const quizes = await Quiz.find();
 
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(email)) {
@@ -141,10 +145,14 @@ router.post("/register", async (req, res) =>
           }
 
           if (Object.keys(error).length > 0) { 
-            return res.render("users/register", {error, username, email});
+            return res.render("users/register", {error, username, email, quizes });
           }
 
            const user = await User.create({username, password:hashedPassword, email, termsAccepted, subscribed});
+           const tokenExpire = "1h";
+           const token = jwt.sign({userId: user._id} ,jwtSecret, {expiresIn: tokenExpire});
+           res.cookie("token", token, {httpOnly: true}, {maxAge: rememberMe ? 604800000 : 3600000});
+           res.user = user;
            res.redirect("/dashboard");
       } catch (error) {
          console.log(error);
@@ -280,8 +288,9 @@ router.get('/quiz/:id', authMiddleware, async (req, res) => {
   const quizzes = await Quiz.find();
   const quiz = await Quiz.findById(req.params.id);
   const user = await User.findById(req.userId);
+  const quizes = await Quiz.find();
 
-  res.render('users/quiz_start', { user,quiz , quizzes, layout: usersLayout });
+  res.render('users/quiz_start', { user,quiz ,quizes, quizzes, layout: usersLayout });
 });
 
 

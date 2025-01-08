@@ -1,79 +1,4 @@
-<style>
-    /* Custom navbar styles that override Bootstrap defaults */
-    .navbar {
-        background: rgba(30, 41, 59, 0.9) !important;
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-        padding: 1rem;
-    }
-    
-    .navbar-brand {
-        color: #f8fafc !important;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    .navbar-brand img {
-        border-radius: 8px;
-    }
-    
-    .navbar-toggler {
-        border-color: rgba(248, 250, 252, 0.2) !important;
-    }
-    
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(248, 250, 252, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-    }
-    
-    .nav-link {
-        color: #94a3b8 !important;
-        transition: color 0.3s ease, transform 0.3s ease;
-        padding: 0.5rem 1rem !important;
-    }
-    
-    .nav-link:hover {
-        color: #f8fafc !important;
-        transform: translateY(-1px);
-    }
-    
-    .nav-link.active {
-        color: #3b82f6 !important;
-        font-weight: 500;
-    }
-    
-    /* Special styling for auth links */
-    .navbar-nav.ms-auto .nav-link {
-        padding: 0.5rem 1rem !important;
-        border-radius: 0.5rem;
-    }
-    
-    .navbar-nav.ms-auto .nav-item:last-child .nav-link {
-        background: #3b82f6;
-        color: white !important;
-        margin-left: 0.5rem;
-    }
-    
-    .navbar-nav.ms-auto .nav-item:last-child .nav-link:hover {
-        background: #2563eb;
-        transform: translateY(-1px);
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .navbar-nav.ms-auto {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-        }
-        
-        .navbar-nav.ms-auto .nav-item:last-child .nav-link {
-            margin-left: 0;
-            margin-top: 0.5rem;
-        }
-    }
-    </style>
+
     
     <header>
         <!-- Navbar -->
@@ -92,15 +17,15 @@
                             <a class="nav-link" href="/games">Quizzes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Blogs</a>
+                            <a class="nav-link" href="/contact">Contact Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About Us</a>
+                            <a class="nav-link" href="/about">About Us</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link" href="/login">Log In</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/register">Sign Up</a>

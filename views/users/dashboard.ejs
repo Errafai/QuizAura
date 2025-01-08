@@ -1,67 +1,310 @@
-   
-        <!-- Carousel -->
-        <section class="carousel_page mt-4">
-            <div class="text_content mt-4">
-                <h1 class="mb-4">Learn to code by playing games</h1>
-                <p  class="mb-4">Codepip is the platform for your favorite web <br> development games. Gain an edge in your <br> next interview or project.</p>
-                <a href="/register" class="btn btn-dark mb-2 btn-lg pb-3 create_button mb-4">Create Free Account</a>
-            </div>
-            <div id="carouselExampleIndicators" class="carousel slide images" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="/image/Blue_Stephanos_3840x2160.jpg" class="d-block w-100">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="/image/Devil.jpg" class="d-block w-100">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="/image/Dragon Chant.jpg" class="d-block w-100">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </section>
-
-    <!-- start building our freaturs-->
-
-    <section id="features">
-
-        <div class="row">
-          <h2 class="mb-2">Create a free account to enjoy these features</h2>
-          <div class="feacher col-lg-4 col-sm-12 col-md-4">
-            <i class="ACHR fas fa-trophy"></i> 
-            <h3>achievements</h3> 
-          <p>Save your progress and access it from anywhere.</p>
+<style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --background: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --text-primary: #f8fafc;  
+      --text-secondary: #94a3b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1a1f35 0%, #0f172a 50%, #1e293b 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 6rem 2rem;
+    }
+    
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+    
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      background: linear-gradient(to right, var(--text-primary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 2.5rem;
+      color: var(--text-secondary);
+      max-width: 40ch;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      width: fit-content;
+    }
+    
+    .cta-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(59, 130, 246, 0.5);
+    }
+    
+    /* Features Section */
+    .features {
+      background: rgba(30, 41, 59, 0.3);
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .features::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 4rem;
+      background: linear-gradient(to right, var(--text-primary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+    
+    .feature-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+      border-color: var(--primary);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+    }
+    
+    /* Games Section */
+    .games {
+      padding: 6rem 2rem;
+    }
+    
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    
+    .game-card {
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s ease;
+    }
+    
+    .game-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .game-image {
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      border-radius: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+    }
+    
+    .game-card:hover .game-overlay {
+      opacity: 1;
+    }
+    
+    .game-info {
+      color: var(--text-primary);
+    }
+    
+    .game-info h4 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .game-info h5 {
+      color: var(--text-secondary);
+      font-weight: normal;
+    }
+    
+    /* Testimonials Section */
+    .testimonials {
+      background: rgba(30, 41, 59, 0.3);
+      padding: 6rem 2rem;
+      position: relative;
+    }
+    
+    .testimonial-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+      transform: translateX(5px);
+      border-color: var(--primary);
+    }
+    
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    
+      .hero-content {
+        align-items: center;
+      }
+    
+      .features-grid,
+      .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .features-grid,
+      .game-grid {
+        grid-template-columns: 1fr;
+      }
+    
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+    
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+    </style>
+    
+    
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <h1>Learn to code by playing games</h1>
+            <p>Codepip is the platform for your favorite web development games. Gain an edge in your next interview or project.</p>
+            <a href="/register" class="cta-button">Create Free Account</a>
           </div>
-          <div class="feacher col-lg-4 col-sm-12 col-md-4">
-            <i class="ACHR fas fa-flag-checkered"></i>
-             <h3>Checkpoints</h3>
-          <p>Track and share your in-game achievements.</p>
-          </div>
-          <div class="feacher col-lg-4 col-sm-12 col-md-4">
-            <i class="ACHR fas fa-rocket"></i>
-            <h3>New Releases</h3>
-          <p>Discover games that teach the latest coding topics.</p>
+          <div class="carousel">
+            <!-- Carousel content here -->
           </div>
         </div>
+      </section>
     
-    </section>
+      <section class="features">
+        <h2 class="section-title">Create a free account to enjoy these features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <i class="feature-icon fas fa-trophy"></i>
+            <h3>Achievements</h3>
+            <p>Save your progress and access it from anywhere.</p>
+          </div>
+          <div class="feature-card">
+            <i class="feature-icon fas fa-flag-checkered"></i>
+            <h3>Checkpoints</h3>
+            <p>Track and share your in-game achievements.</p>
+          </div>
+          <div class="feature-card">
+            <i class="feature-icon fas fa-rocket"></i>
+            <h3>New Releases</h3>
+            <p>Discover games that teach the latest coding topics.</p>
+          </div>
+        </div>
+      </section>
 
 <!-- this part for games -->
 
 <style>
+        
     #features2 {
       background: linear-gradient(135deg, #1a1f35 0%, #0f172a 50%, #1e293b 100%);
       padding: 4rem 2rem;
@@ -168,10 +411,11 @@
         background: rgba(15, 23, 42, 0.85);
       }
     }
+    
     </style>
     
     <section id="features2">
-        <h1 class="text-center">Games</h1>
+        <h1 class="text-center">Quizes</h1>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 <% quizes.forEach(quiz => { %>
@@ -218,6 +462,29 @@
         </div>
     </section>
 
-    <script>
-
-    </script>
+    <section class="testimonials">
+        <h2 class="section-title">What Our Users Say</h2>
+        <div class="container">
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+          <div class="testimonial-card">
+            "Of the many code learning platforms I've tried and use, I think your pacing and repetition is nearly perfect, keep up the great work!" - Daniel B.
+          </div>
+        </div>
+      </section>
